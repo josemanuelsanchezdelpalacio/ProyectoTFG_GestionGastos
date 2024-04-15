@@ -1,10 +1,7 @@
 package com.dam2jms.proyectotfg_gestiongastos.screens
 
 import android.app.DatePickerDialog
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,7 +30,6 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -45,6 +41,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -58,11 +55,11 @@ import java.util.Calendar
 @Composable
 fun DatosGastosScreen(navController: NavController, mvvm: ViewModel) {
     val uiState by mvvm.uiState.collectAsState()
-    val showDatePickerDialog = remember { mutableStateOf(false) }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var fecha by rememberSaveable { mutableStateOf("") }
     var time by rememberSaveable { mutableStateOf("") }
+    val showDatePickerDialog = remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -71,9 +68,6 @@ fun DatosGastosScreen(navController: NavController, mvvm: ViewModel) {
             DrawerContent(navController = navController)
         },
     ) {
-        val backgroundColor = MaterialTheme.colorScheme.surface
-        val contentColor = contentColorFor(backgroundColor)
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -84,16 +78,14 @@ fun DatosGastosScreen(navController: NavController, mvvm: ViewModel) {
                         }
                     },
                     actions = {
-                        IconButton(onClick = { /* Acción al hacer clic en el calendario */ }) {
+                        IconButton(onClick = { showDatePickerDialog.value = true }) {
                             Icon(Icons.Filled.DateRange, contentDescription = "Calendario")
                         }
                     }
                 )
             },
             bottomBar = {
-                BottomAppBar(
-                    contentColor = contentColor
-                ) {
+                BottomAppBar {
                     Spacer(Modifier.weight(1f, true))
                     FloatingActionButton(onClick = { /* Acción al hacer clic en + */ }) {
                         Icon(Icons.Filled.Add, contentDescription = "Agregar")
@@ -121,46 +113,12 @@ fun DatosGastosScreen(navController: NavController, mvvm: ViewModel) {
 
 @Composable
 fun DatosGastosScreenBody(modifier: Modifier, mvvm: ViewModel, uiState: UiState) {
-    val backgroundColor = MaterialTheme.colorScheme.surface
-    val contentColor = contentColorFor(backgroundColor)
-
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center
+            .background(Brush.verticalGradient(listOf(Color.DarkGray, Color.Black)))
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .background(color = MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(8.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("usuario@gmail.com", color = contentColor)
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = { /* Acción al hacer clic en Cartera */ },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.Email, contentDescription = "Cartera", tint = contentColor)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Cartera", color = contentColor)
-            }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = { /* Acción al hacer clic en Ajustes */ },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.Settings, contentDescription = "Ajustes", tint = contentColor)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Ajustes", color = contentColor)
-            }
-        }
+        // En el centro de la pantalla no debería salir nada
     }
 }
 
